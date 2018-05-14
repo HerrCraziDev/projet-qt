@@ -31,7 +31,7 @@ enum class SimulationState
 class SimulationController
 {
 public:
-    SimulationController();
+    SimulationController(Simulation *s);
     ~SimulationController();
 
     void launch();  //Launch the simulation
@@ -44,7 +44,8 @@ public:
 
     void exec(int frames=1);    //Process the given number of frames
 
-    Simulation* getSimulation() const;  //Return the current simulation frame
+    Simulation* getSimulation() const;  //Return the simulation
+    SimulationFrame getSimulationFrame() const; //Return the current simulation frame
 
     SimulationState getState() const;
 

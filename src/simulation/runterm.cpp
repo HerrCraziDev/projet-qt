@@ -1,10 +1,16 @@
-#include "Entity.hpp"
+#include "Animal.hpp"
+#include "Simulation.hpp"
 
 int main(int argc, char *argv[])
 {
-    Entity panzer(10,10,"Panzer");
+    
+    Animal superpanzer("SUPERPANZER");
+    Animal ours(8,5,"Peau de l'ours (avec ours)");
 
-    Entity panzer2(panzer);
+    std::cout << superpanzer.getName() << " a " << superpanzer.atk() << " points d'attaque\n";
+
+    Simulation world(42,42,16,2,50);
+    world.createEntity(EType::NeutralAsset, 4,4,"Caillou en pierre de roche");
 
     return 0;
 }

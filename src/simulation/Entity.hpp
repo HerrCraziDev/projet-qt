@@ -3,25 +3,38 @@
 
 #include <iostream>
 #include <string>
+#include <array>
+
+
+/* Available types of Entities */
 
 enum class EType
 {
-    Object,     //Generic object
-    GroundTile, //Generic ground tile
+    Entity,     //Generic entity (a more precise type should be used instead of this)
     Animal,     //Generic animal
-
-    Plant,      //A plant
-    Water,      //A piece of water
+    Predator,   //A special type of Animal that have an aggressive behavior an eats Preys
+    Prey,       //A special type of Animal which can be eated by a Predator and eats Resources
+    Resource,      //A resource (special type of EffectiveAsset that gives health and disappears once eated)
     NeutralAsset,   //A neutral asset on the map that does not affect in any way nearby entities, like a log, dead leaves, ect
-    EffectiveAsset, //An asset that affects the entities above it in some way (dealing damages, slowing movement)
+    EffectiveAsset, //An asset that affects the nearby entities in some way (dealing damages, slowing movement)
 };
+
+
+static const std::array<EType, 7> EntityTypes = {   EType::Entity, 
+                                                    EType::Animal, 
+                                                    EType::Predator, 
+                                                    EType::Prey, 
+                                                    EType::Resource, 
+                                                    EType::NeutralAsset, 
+                                                    EType::EffectiveAsset };
 
 class Entity
 {
 public:
     Entity();
     Entity(Entity &source);
-    Entity(int posx, int posy, std::string newName);
+    
+    Entity(EType type, int posx, int posy, std::string newName);
     ~Entity();
 
     void lock()
@@ -97,11 +110,17 @@ public:
         texturePath = newTexturePath;
     }
 
+    EType getType() const
+    {
+        return type;
+    }
+
 private:
     float x, y;
     bool visible, movable;
 
     std::string name;
     std::string texturePath;
+    EType type;
 };
 #endif //ENTITY
