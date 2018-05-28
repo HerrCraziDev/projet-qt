@@ -1,7 +1,7 @@
 /********************************************************************************
 ** Form generated from reading UI file 'MainWindow.ui'
 **
-** Created by: Qt User Interface Compiler version 5.9.1
+** Created by: Qt User Interface Compiler version 5.5.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
@@ -205,6 +205,7 @@ public:
         input_seed->setObjectName(QStringLiteral("input_seed"));
         input_seed->setEnabled(true);
         input_seed->setGeometry(QRect(0, 20, 161, 26));
+        input_seed->setCursor(QCursor(Qt::IBeamCursor));
         input_seed->setFocusPolicy(Qt::ClickFocus);
         input_seed->setMaximum(99999999);
         input_seed->setValue(42);
@@ -429,39 +430,39 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
-        group_options->setTitle(QApplication::translate("MainWindow", "Options", Q_NULLPTR));
-        group_wgen->setTitle(QApplication::translate("MainWindow", "World Generation", Q_NULLPTR));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
+        group_options->setTitle(QApplication::translate("MainWindow", "Options", 0));
+        group_wgen->setTitle(QApplication::translate("MainWindow", "World Generation", 0));
 #ifndef QT_NO_TOOLTIP
-        lbl_seed->setToolTip(QApplication::translate("MainWindow", "The seed used for randomly generating the world. The same seed will always give the same world after generation.", Q_NULLPTR));
+        lbl_seed->setToolTip(QApplication::translate("MainWindow", "The seed used for randomly generating the world. The same seed will always give the same world after generation.", 0));
 #endif // QT_NO_TOOLTIP
-        lbl_seed->setText(QApplication::translate("MainWindow", "Seed", Q_NULLPTR));
-        input_seed->setSpecialValueText(QApplication::translate("MainWindow", "n/a", Q_NULLPTR));
+        lbl_seed->setText(QApplication::translate("MainWindow", "Seed", 0));
+        input_seed->setSpecialValueText(QApplication::translate("MainWindow", "n/a", 0));
 #ifndef QT_NO_TOOLTIP
-        lbl_wsize_title->setToolTip(QApplication::translate("MainWindow", "The size of the world map, in pixels.", Q_NULLPTR));
+        lbl_wsize_title->setToolTip(QApplication::translate("MainWindow", "The size of the world map, in pixels.", 0));
 #endif // QT_NO_TOOLTIP
-        lbl_wsize_title->setText(QApplication::translate("MainWindow", "World Size", Q_NULLPTR));
-        lbl_wsize_cross->setText(QApplication::translate("MainWindow", "\303\227", Q_NULLPTR));
-        lbl_predprct->setText(QApplication::translate("MainWindow", "Predators", Q_NULLPTR));
-        lbl_preysprct->setText(QApplication::translate("MainWindow", "Preys", Q_NULLPTR));
+        lbl_wsize_title->setText(QApplication::translate("MainWindow", "World Size", 0));
+        lbl_wsize_cross->setText(QApplication::translate("MainWindow", "\303\227", 0));
+        lbl_predprct->setText(QApplication::translate("MainWindow", "Predators", 0));
+        lbl_preysprct->setText(QApplication::translate("MainWindow", "Preys", 0));
 #ifndef QT_NO_TOOLTIP
-        toggle_fs->setToolTip(QApplication::translate("MainWindow", "Toggle the fullscreen mode", Q_NULLPTR));
+        toggle_fs->setToolTip(QApplication::translate("MainWindow", "Toggle the fullscreen mode", 0));
 #endif // QT_NO_TOOLTIP
-        toggle_fs->setText(QApplication::translate("MainWindow", "Fullscreen", Q_NULLPTR));
-        btn_advancedopt->setText(QApplication::translate("MainWindow", "Advanced Options", Q_NULLPTR));
+        toggle_fs->setText(QApplication::translate("MainWindow", "Fullscreen", 0));
+        btn_advancedopt->setText(QApplication::translate("MainWindow", "Advanced Options", 0));
 #ifndef QT_NO_TOOLTIP
-        btn_launch->setToolTip(QApplication::translate("MainWindow", "CLICK HERE 100% FREE !!", Q_NULLPTR));
+        btn_launch->setToolTip(QApplication::translate("MainWindow", "CLICK HERE 100% FREE !!", 0));
 #endif // QT_NO_TOOLTIP
-        btn_launch->setText(QApplication::translate("MainWindow", "Launch Simulation", Q_NULLPTR));
-        pbar_predators->setFormat(QApplication::translate("MainWindow", "%p predators", Q_NULLPTR));
-        pbar_preys->setFormat(QApplication::translate("MainWindow", "%p preys", Q_NULLPTR));
-        tab->setTabText(tab->indexOf(tab_map), QApplication::translate("MainWindow", "Map", Q_NULLPTR));
+        btn_launch->setText(QApplication::translate("MainWindow", "Launch Simulation", 0));
+        pbar_predators->setFormat(QApplication::translate("MainWindow", "%p predators", 0));
+        pbar_preys->setFormat(QApplication::translate("MainWindow", "%p preys", 0));
+        tab->setTabText(tab->indexOf(tab_map), QApplication::translate("MainWindow", "Map", 0));
 #ifndef QT_NO_ACCESSIBILITY
-        tab_graphs->setAccessibleName(QApplication::translate("MainWindow", "tttt", Q_NULLPTR));
+        tab_graphs->setAccessibleName(QApplication::translate("MainWindow", "tttt", 0));
 #endif // QT_NO_ACCESSIBILITY
-        label->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" color:#888a85;\">This functionality haven't been implemented yet, and may be in a future version.</span></p></body></html>", Q_NULLPTR));
-        tab->setTabText(tab->indexOf(tab_graphs), QApplication::translate("MainWindow", "Graphs", Q_NULLPTR));
-        tab->setTabToolTip(tab->indexOf(tab_graphs), QApplication::translate("MainWindow", "Shows statistic graphs about population evolution", Q_NULLPTR));
+        label->setText(QApplication::translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" color:#888a85;\">This functionality haven't been implemented yet, and may be in a future version.</span></p></body></html>", 0));
+        tab->setTabText(tab->indexOf(tab_graphs), QApplication::translate("MainWindow", "Graphs", 0));
+        tab->setTabToolTip(tab->indexOf(tab_graphs), QApplication::translate("MainWindow", "Shows statistic graphs about population evolution", 0));
     } // retranslateUi
 
 };
