@@ -149,12 +149,38 @@ void Animal::speedModifier(float value)
     _speedModifier = value;
 }
 
+bool Animal::isAlive() const
+{
+    return (_hp > 0);
+}
+
 bool Animal::move(float dx, float dy)
 {
-    return false;
+    setX(getX() + dx);
+    setY(getY() + dy);
+    setHp( getHp() - sqrt(dx*dx + dy*dy) );
+    return true;
 }
 
 bool Animal::move(float dl, int angle)
 {
-    return false;
+    float radAngle = angle * M_PI / 180;
+    setX(getX() + dl*cos(radAngle));
+    setY(getY() + dl*sin(radAngle));
+    setHp( getHp() - dl );
+
+    return true;
+}
+
+void Animal::update()
+{
+    if ( isAlive() ) 
+    {
+        move( (float)utl::rand::get(0, speed()), _heading + utl::rand::get(-36, 36) );
+
+        if ( !isAlive() ) //He died :(
+        {
+            type = EType::NeutralAsset;
+        }
+    }
 }

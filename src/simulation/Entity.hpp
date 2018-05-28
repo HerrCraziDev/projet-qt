@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <string>
-#include <array>
+#include <vector>
 
 
 /* Available types of Entities */
@@ -19,14 +19,19 @@ enum class EType
     EffectiveAsset, //An asset that affects the nearby entities in some way (dealing damages, slowing movement)
 };
 
-
-static const std::array<EType, 7> EntityTypes = {   EType::Entity, 
+/* Sugar everywhere ! We loove sugar !*/
+static const std::vector<EType> EntityTypes = {   EType::Entity, 
                                                     EType::Animal, 
                                                     EType::Predator, 
                                                     EType::Prey, 
                                                     EType::Resource, 
                                                     EType::NeutralAsset, 
                                                     EType::EffectiveAsset };
+
+std::ostream& operator<< (std::ostream &ostr, EType type);
+
+
+/* The basic representation of an Entity */
 
 class Entity
 {
@@ -115,7 +120,9 @@ public:
         return type;
     }
 
-private:
+    virtual void update();
+    
+protected:
     float x, y;
     bool visible, movable;
 

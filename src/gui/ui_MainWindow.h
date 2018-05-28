@@ -205,6 +205,7 @@ public:
         input_seed->setObjectName(QStringLiteral("input_seed"));
         input_seed->setEnabled(true);
         input_seed->setGeometry(QRect(0, 20, 161, 26));
+        input_seed->setCursor(QCursor(Qt::IBeamCursor));
         input_seed->setFocusPolicy(Qt::ClickFocus);
         input_seed->setMaximum(99999999);
         input_seed->setValue(42);

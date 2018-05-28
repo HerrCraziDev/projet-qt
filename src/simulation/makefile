@@ -1,4 +1,5 @@
 CFLAGS = -Wall -pedantic -std=c++14
+LDFLAGS = -lpthread
 
 SRC = $(wildcard *.cpp)
 NOM = $(basename $(notdir $(SRC)))
@@ -13,7 +14,7 @@ run: all
 	./$(TARGET)
 
 term : $(OBJ)
-	g++ *.o -o $(TARGET)
+	g++ *.o -o $(TARGET) $(LDFLAGS)
 
 %.o: %.cpp
 	g++ -c $< -o $@ $(CFLAGS)
