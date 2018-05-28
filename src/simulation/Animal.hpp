@@ -2,8 +2,9 @@
 #define ANIMAL
 
 #include <iostream>
+#include <cmath>
 #include "Entity.hpp"
-
+#include "utils.hpp"
 
 class Animal : public Entity
 {
@@ -46,8 +47,11 @@ public:
     void speedModifier(float value);
     void defModifier(float value);
 
+    bool isAlive() const;
+
     virtual bool move(float dx, float dy);
     virtual bool move(float dl, int angle);
+    virtual void update();
 
 private:
     float _hp;

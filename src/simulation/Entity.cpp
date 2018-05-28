@@ -30,3 +30,42 @@ Entity::~Entity()
 {
     std::cout << "[Entity] Entity deleted\n";
 }
+
+void Entity::update()
+{
+    //something
+}
+
+
+
+std::ostream& operator<< (std::ostream &ostr, EType type)
+{
+    
+    switch (type)
+    {
+        case EType::Entity:
+            ostr << "EType::Entity";
+            break;
+        case EType::Animal:
+            ostr << "EType::Animal";
+            break;
+        case EType::Predator:
+            ostr << "EType::Predator";
+            break;
+        case EType::Prey:
+            ostr << "EType::Prey";
+            break;
+        case EType::NeutralAsset:
+            ostr << "EType::NeutralAsset";
+            break;
+        case EType::EffectiveAsset:
+            ostr << "EType::EffectiveAsset";
+            break;
+        case EType::Resource:
+            ostr << "EType::Resource";
+            break;
+        default:
+            break;
+    }
+    return ostr;
+}

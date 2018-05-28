@@ -8,6 +8,7 @@ implémenter World dans Simulation avec un foncteur pour le processing d'une Sim
 #include <iostream>
 #include <vector>
 #include <memory>
+#include <mutex>
 
 #include "Animal.hpp"
 
@@ -18,7 +19,13 @@ class SimulationFrame
 public: 
     SimulationFrame();
     SimulationFrame(Simulation *s);
+    SimulationFrame(SimulationFrame &s);
     ~SimulationFrame();
+
+    std::vector<std::shared_ptr<Entity>> getEntities() const;
+
+private:
+    std::vector<std::shared_ptr<Entity>> _entities;
 };
 
 
@@ -38,6 +45,7 @@ public:
     std::vector<std::shared_ptr<Entity>> getEntities() const;
     std::vector<std::shared_ptr<Entity>> getEntitiesByPosition(int tilex, int tiley) const;
     std::vector<std::shared_ptr<Entity>> getEntitiesByType(EType type) const;
+    int countEntities(std::vector<EType> types = EntityTypes) const;
     //std::vector<std::vector<std::shared_ptr<Tile>>> getWorld() const;
 
     bool processFrame();
@@ -50,6 +58,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<Entity>> _entities;
+    std::mutex mtx_accessFrame;
     //std::vector<std::vector<std::shared_ptr<Tile>>> _world;
 
     SimulationFrame _current;

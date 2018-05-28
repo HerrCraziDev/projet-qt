@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <thread>
+#include <chrono>
 
 #include "Simulation.hpp"
 
@@ -23,10 +24,15 @@ enum class SimulationState
 {
     Paused,     //The simulation is paused
     Stopped,    //The simulation have been stopped
+    Stopping,   //The simulation have been requested to stop, but is still processing
     Running,    //The simulation is running but on idle state (ie. not processing) (This state is safe for threads)
     Processing, //The simulation is processing a step. This state is NOT thread-safe
     Initialized //The simulation have been initialized but haven't been launched yet
 };
+
+std::ostream& operator<< (std::ostream &out, SimulationState state);
+
+
 
 class SimulationController
 {
@@ -47,13 +53,20 @@ public:
     Simulation* getSimulation() const;  //Return the simulation
     SimulationFrame getSimulationFrame() const; //Return the current simulation frame
 
-    SimulationState getState() const;
+    SimulationState state();
+    void state(SimulationState state);
+
+    static void worker(SimulationController *that);              //The processing loop. 
+    
+    std::mutex mtx_pause;
 
 private:
-    double processedFrames;
-    int tickLength;
-    SimulationState state;
-    Simulation *sim;
+    double _processedFrames;
+    int _tickLength;
+    SimulationState _state;
+    Simulation *_sim;
 
+    std::mutex mtx_state;
+    std::thread th_sim;
 };
 #endif //SIMCTRL
