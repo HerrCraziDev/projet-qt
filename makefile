@@ -12,9 +12,9 @@ simu:
 	@echo "#########################"
 
 build:
-        @echo "###### Building project ######"
-        make -C src/build $(filter-out $@,$(MAKECMDGOALS))
-        @echo "##########################"
+	@echo "###### Building project ######"
+	make -C src/build $(filter-out $@,$(MAKECMDGOALS))
+	@echo "##########################"
 
 %:
 	@:
