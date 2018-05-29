@@ -12,9 +12,9 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_DEPRECATED_WARNINGS -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
+DEFINES       = -DQT_NO_DEBUG -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES) -std=c++14
 INCPATH       = -I. -I. -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtWidgets -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
 QMAKE         = /usr/lib/x86_64-linux-gnu/qt5/bin/qmake
 DEL_FILE      = rm -f
@@ -52,13 +52,15 @@ SOURCES       = Controls.cpp \
 		Loader.cpp \
 		main.cpp \
 		MainWindow.cpp \
-		SimulationScene.cpp moc_MainWindow.cpp
+		SimulationScene.cpp moc_MainWindow.cpp \
+		moc_SimulationScene.cpp
 OBJECTS       = Controls.o \
 		Loader.o \
 		main.o \
 		MainWindow.o \
 		SimulationScene.o \
-		moc_MainWindow.o
+		moc_MainWindow.o \
+		moc_SimulationScene.o
 DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/unix.conf \
 		/usr/lib/x86_64-linux-gnu/qt5/mkspecs/common/linux.conf \
@@ -123,8 +125,7 @@ DIST          = /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/spec_pre.prf \
 		gui.pro Controls.hpp \
 		Loader.hpp \
 		MainWindow.hpp \
-		SimulationScene.hpp \
-		ui_MainWindow.h Controls.cpp \
+		SimulationScene.hpp Controls.cpp \
 		Loader.cpp \
 		main.cpp \
 		MainWindow.cpp \
@@ -304,7 +305,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents Controls.hpp Loader.hpp MainWindow.hpp SimulationScene.hpp ui_MainWindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents Controls.hpp Loader.hpp MainWindow.hpp SimulationScene.hpp $(DISTDIR)/
 	$(COPY_FILE) --parents Controls.cpp Loader.cpp main.cpp MainWindow.cpp SimulationScene.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents MainWindow.ui $(DISTDIR)/
 
@@ -330,11 +331,25 @@ check: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_MainWindow.cpp
+compiler_moc_header_make_all: moc_MainWindow.cpp moc_SimulationScene.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_MainWindow.cpp
-moc_MainWindow.cpp: MainWindow.hpp
+	-$(DEL_FILE) moc_MainWindow.cpp moc_SimulationScene.cpp
+moc_MainWindow.cpp: SimulationScene.hpp \
+		../simulation/SimulationController.hpp \
+		../simulation/Simulation.hpp \
+		../simulation/Animal.hpp \
+		../simulation/Entity.hpp \
+		../simulation/utils.hpp \
+		MainWindow.hpp
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/isen/mes_documents/codes/Projets/projet-qt/src/gui -I/home/isen/mes_documents/codes/Projets/projet-qt/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include MainWindow.hpp -o moc_MainWindow.cpp
+
+moc_SimulationScene.cpp: ../simulation/SimulationController.hpp \
+		../simulation/Simulation.hpp \
+		../simulation/Animal.hpp \
+		../simulation/Entity.hpp \
+		../simulation/utils.hpp \
+		SimulationScene.hpp
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/isen/mes_documents/codes/Projets/projet-qt/src/gui -I/home/isen/mes_documents/codes/Projets/projet-qt/src/gui -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include SimulationScene.hpp -o moc_SimulationScene.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -360,18 +375,38 @@ Controls.o: Controls.cpp
 Loader.o: Loader.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o Loader.o Loader.cpp
 
-main.o: main.cpp MainWindow.hpp
+main.o: main.cpp MainWindow.hpp \
+		SimulationScene.hpp \
+		../simulation/SimulationController.hpp \
+		../simulation/Simulation.hpp \
+		../simulation/Animal.hpp \
+		../simulation/Entity.hpp \
+		../simulation/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 MainWindow.o: MainWindow.cpp MainWindow.hpp \
+		SimulationScene.hpp \
+		../simulation/SimulationController.hpp \
+		../simulation/Simulation.hpp \
+		../simulation/Animal.hpp \
+		../simulation/Entity.hpp \
+		../simulation/utils.hpp \
 		ui_MainWindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o MainWindow.o MainWindow.cpp
 
-SimulationScene.o: SimulationScene.cpp 
+SimulationScene.o: SimulationScene.cpp SimulationScene.hpp \
+		../simulation/SimulationController.hpp \
+		../simulation/Simulation.hpp \
+		../simulation/Animal.hpp \
+		../simulation/Entity.hpp \
+		../simulation/utils.hpp
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o SimulationScene.o SimulationScene.cpp
 
 moc_MainWindow.o: moc_MainWindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_MainWindow.o moc_MainWindow.cpp
+
+moc_SimulationScene.o: moc_SimulationScene.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_SimulationScene.o moc_SimulationScene.cpp
 
 ####### Install
 
