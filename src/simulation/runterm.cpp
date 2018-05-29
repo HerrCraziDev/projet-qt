@@ -29,6 +29,14 @@ int main(int argc, char *argv[])
     
     simulator.stop();
 
+    Simulation newworld(420, 420, 8, 2, 0.5);
+
+    simulator.attach(&newworld);
+    simulator.launch();
+
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+
+    simulator.stop();
     //simulator.stop();
 
     return 0;

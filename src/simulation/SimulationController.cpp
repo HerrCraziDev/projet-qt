@@ -1,5 +1,13 @@
 #include "SimulationController.hpp"
 
+SimulationController::SimulationController() : 
+    _processedFrames(0),
+    _tickLength(10),
+    _state(SimulationState::Empty)
+{
+
+}
+
 SimulationController::SimulationController(Simulation *s) :
     _processedFrames(0),
     _tickLength(10),
@@ -47,10 +55,20 @@ void SimulationController::resume()
 
 void SimulationController::stop()
 {
-    resume();
-    state(SimulationState::Stopping);
-    th_sim.join();
-    state(SimulationState::Stopped);
+    if (state() != SimulationState::Stopped && state() != SimulationState::Empty)
+    {
+        resume();
+        state(SimulationState::Stopping);
+        th_sim.join();
+        state(SimulationState::Stopped);
+    }
+}
+
+void SimulationController::attach(Simulation *s)
+{
+    stop();
+    _sim = s;
+    state(SimulationState::Initialized);
 }
 
 void SimulationController::worker(SimulationController *that)

@@ -11,5 +11,10 @@ simu:
 	make -C src/simulation $(filter-out $@,$(MAKECMDGOALS))
 	@echo "#########################"
 
+build:
+        @echo "###### Building project ######"
+        make -C src/build $(filter-out $@,$(MAKECMDGOALS))
+        @echo "##########################"
+
 %:
 	@:

@@ -22,6 +22,7 @@ frame have been processed.
 /* Possible states of the simulation */
 enum class SimulationState
 {
+    Empty,      //The simulation does not exists
     Paused,     //The simulation is paused
     Stopped,    //The simulation have been stopped
     Stopping,   //The simulation have been requested to stop, but is still processing
@@ -37,6 +38,7 @@ std::ostream& operator<< (std::ostream &out, SimulationState state);
 class SimulationController
 {
 public:
+    SimulationController();
     SimulationController(Simulation *s);
     ~SimulationController();
 
@@ -44,6 +46,8 @@ public:
     void pause();   //Pause the simulation
     void resume();  //Resume the simulation if paused
     void stop();    //Stop the simulation. No further frame will be processed
+
+    void attach(Simulation *s);         //Attach a new simulation to the controller. The previous one is removed and deleted.
 
     void setTickLength(int ticklength); //Set the physical simulation tick length (ie. the time between two simulation frames)
     int getTickLength() const;          //Get the physical simulation tick length

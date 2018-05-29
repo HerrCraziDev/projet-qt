@@ -20,16 +20,25 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    
+    //SimulationController &getController();
 
 public slots:
     void onSetPredatorPercentage(int prct);
     void onSetPreyPercentage(int prct);
     void onNonImplemented();
     void onToggleFullscreen(int state);
+    void onLaunchSimulation();
+    void onTogglePause(bool toggle);
+    void onStopSimulation();
+
+
 
 private:
     Ui::MainWindow *ui;
     SimulationScene *scene;
+
+    SimulationController controller;
 };
 
 #endif // MAINWINDOW_HPP

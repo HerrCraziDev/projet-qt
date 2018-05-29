@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
     this->setWindowTitle("BEAR HUNTER RUSSIA XTREME");
 
 
-    scene = new SimulationScene();
+    scene = new SimulationScene(this);
     ui->g_map->setScene(scene);
     ui->g_map->centerOn(scene->getPlaceholder());
     
@@ -20,6 +20,14 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->btn_launch, SIGNAL(clicked(bool)), this, SLOT(onNonImplemented()));
     connect(ui->toggle_fs, SIGNAL(stateChanged(int)), this, SLOT(onToggleFullscreen(int)));
 }
+
+
+/*SimulationController& MainWindow::getController()
+{
+    return controller;
+}*/
+
+/* Slots */
 
 void MainWindow::onSetPredatorPercentage(int prct)
 {
@@ -40,6 +48,21 @@ void MainWindow::onToggleFullscreen(int state)
 {
     if (state == Qt::Checked) this->showFullScreen();
     else this->showNormal();
+}
+
+void MainWindow::onLaunchSimulation()
+{
+
+}
+
+void MainWindow::onTogglePause(bool state)
+{
+
+}
+
+void MainWindow::onStopSimulation()
+{
+    
 }
 
 MainWindow::~MainWindow()
