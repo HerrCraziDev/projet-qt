@@ -7,7 +7,12 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    this->setWindowTitle("Silent Hunter 6 (beta)");
+    this->setWindowTitle("BEAR HUNTER RUSSIA XTREME");
+
+
+    scene = new SimulationScene();
+    ui->g_map->setScene(scene);
+    ui->g_map->centerOn(scene->getPlaceholder());
     
     connect(ui->slider_predprct, SIGNAL(valueChanged(int)), this, SLOT(onSetPredatorPercentage(int)));
     connect(ui->slider_preysprct, SIGNAL(valueChanged(int)), this, SLOT(onSetPreyPercentage(int)));

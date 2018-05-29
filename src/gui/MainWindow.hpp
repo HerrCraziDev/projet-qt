@@ -6,6 +6,9 @@
 #include <QDebug>
 #include <iostream>
 
+#include "SimulationScene.hpp"
+
+
 namespace Ui {
 class MainWindow;
 }
@@ -26,6 +29,7 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    SimulationScene *scene;
 };
 
 #endif // MAINWINDOW_HPP

@@ -6,6 +6,8 @@
 #include "Entity.hpp"
 #include "utils.hpp"
 
+
+
 class Animal : public Entity
 {
 public:

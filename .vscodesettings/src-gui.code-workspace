@@ -4,5 +4,9 @@
 			"path": "/home/herrcrazi/Programmation/projets/braconnage-simulator-2000"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"iostream": "cpp"
+		}
+	}
 }
