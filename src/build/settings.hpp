@@ -1,0 +1,13 @@
+#ifndef SETTINGS
+#define SETTINGS
+
+#define ST_TILESIZE 32
+#define ST_DEFAULTWORLDSIZE 100
+#define ST_DEFAULTPOP 100
+#define ST_FPS 60
+
+#define ST_PREDATORATK 200
+#define ST_PREDATORDEF 10
+#define ST_PREYDEF 70
+
+#endif //SETTINGS
