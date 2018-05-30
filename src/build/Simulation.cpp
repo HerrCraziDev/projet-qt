@@ -9,8 +9,8 @@ Simulation::Simulation(int worldWidth, int worldHeight, int tileSize, int nbAnim
 {
     //predatorsPrct *= 100;
 
-    utl::rand randX(0, worldWidth * tileSize);
-    utl::rand randY(0, worldHeight * tileSize);
+    utl::rand randX(0, (worldWidth * tileSize) - tileSize);
+    utl::rand randY(0, (worldHeight * tileSize) - tileSize);
     utl::rand randType(0, 100);
 
     randX.seed(seed); randY.seed(seed); randType.seed(seed);
@@ -124,6 +124,39 @@ std::vector<std::shared_ptr<Entity>> Simulation::getEntitiesByType(EType type) c
     return filtered_entities;
 }
 
+std::vector<std::shared_ptr<Entity>> Simulation::filterEntitiesByType(std::vector<std::shared_ptr<Entity>> entities, std::vector<EType> types)
+{
+    std::vector<std::shared_ptr<Entity>> filtered_entities;
+
+    for(auto&& entity : entities)
+    {
+        for(auto&& type : types)
+        {
+            if (entity->getType() == type)
+            {
+                filtered_entities.push_back(entity);
+            }
+        }
+    }
+    
+    return filtered_entities;
+}
+
+std::vector<std::shared_ptr<Entity>> Simulation::getEntitiesByPosition(float posx, float posy, int radius) const
+{
+    std::vector<std::shared_ptr<Entity>> filtered_entities;
+
+    for(auto&& entity : _entities)
+    {
+        if ( abs(posx - entity->getX()) <= radius && abs(posy - entity->getY()) <= radius )
+        {
+            filtered_entities.push_back(entity);
+        }
+    }
+    
+    return filtered_entities;
+}
+
 int Simulation::countEntities(std::vector<EType> types) const
 {
     int count = 0;
@@ -149,7 +182,7 @@ bool Simulation::processFrame()
     _current = SimulationFrame(this);
     mtx_accessFrame.unlock();
 
-    std::cout << "[Simulation] Updated " << countEntities( {EType::Animal, EType::Predator, EType::Prey} ) << " entities\n";
+    std::cout << "\r[Simulation] Updated " << countEntities( {EType::Animal, EType::Predator, EType::Prey} ) << " entities\r";
     return countEntities( {EType::Animal, EType::Predator, EType::Prey} );
 }
 
@@ -182,19 +215,12 @@ int Simulation::tileSize() const
 
 /*********** TO BE MOVED ************/
 SimulationFrame::SimulationFrame() {}
-SimulationFrame::SimulationFrame(Simulation *s) : _entities(s->getEntities()) {
-    std::cout << "[DEBUG][Simufra] (sc) Size : " << _entities.size() << "/" << s->getEntities().size() << "\n";
-}
-SimulationFrame::SimulationFrame(SimulationFrame &s) : _entities(s.getEntities()) {
-    std::cout << "[DEBUG][Simufra] (&) Size : " << s.getEntities().size() << "\n";
-}
-SimulationFrame::SimulationFrame(SimulationFrame *s) : _entities(s->getEntities()) {
-    std::cout << "[DEBUG][Simufra] (*) Size : " << s->getEntities().size() << "\n";
-}
+SimulationFrame::SimulationFrame(Simulation *s) : _entities(s->getEntities()) {}
+SimulationFrame::SimulationFrame(SimulationFrame &s) : _entities(s.getEntities()) {}
+SimulationFrame::SimulationFrame(SimulationFrame *s) : _entities(s->getEntities()) {}
 
 std::vector<std::shared_ptr<Entity>> SimulationFrame::getEntities() const
 {
-    std::cout << "[DEBUG][Simufra] (r>) Size : " << _entities.size() << "\n";
     return _entities;
 }
 

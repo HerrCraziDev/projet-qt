@@ -20,7 +20,7 @@ public:
     /* Public methods */
 
     //void eat(Resource res);
-
+    
     void update();
     void die();
 

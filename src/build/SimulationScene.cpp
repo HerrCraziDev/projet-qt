@@ -2,12 +2,11 @@
 
 SimulationScene::SimulationScene(SimulationController &cntr, QObject *parent) : QGraphicsScene(parent), controller(cntr)
 {    
+    //Some fancy logo to dispay here
     bk_placeholder = new QGraphicsPixmapItem(QPixmap("../../res/textures/bearhunterrussia_logo.png"));
-    worldBackground = new QGraphicsRectItem(0,0,ST_TILESIZE, ST_TILESIZE);
-
     this->addItem(bk_placeholder);
     
-    // sim->getCurrentFrame();
+    //Loading the textures resources
     textures[EType::Entity] = QPixmap();
     textures[EType::Animal] = QPixmap("../../res/textures/objects/bear.png");
     textures[EType::Prey] = QPixmap("../../res/textures/objects/bear.png");
@@ -18,9 +17,8 @@ SimulationScene::SimulationScene(SimulationController &cntr, QObject *parent) : 
     textures[EType::DeadPredator] = QPixmap("../../res/textures/objects/hunter_dead.png");
     textures[EType::DeadPrey] = QPixmap("../../res/textures/objects/bear_dead.png");
 
-    /*QGraphicsPixmapItem *pladimir = new QGraphicsPixmapItem(QPixmap("../../res/textures/objects/bear.png"));
-    this->addItem(pladimir);
-    pladimir->setPos(42,42);*/
+    grass = QPixmap("../../res/textures/ground/grass.png");
+
 }
 
 SimulationScene::~SimulationScene()
@@ -34,9 +32,23 @@ void SimulationScene::launch(int ww, int wh, int tickLength, int nbAnimals, floa
     
     sim = new Simulation(ww, wh, ST_TILESIZE, nbAnimals, predPrct, seed);
 
-    worldBackground->setRect(0, 0, ww * ST_TILESIZE, wh * ST_TILESIZE);
-    worldBackground->setBrush(Qt::green);
-    this->addItem(worldBackground);
+    /* Creating ground tiles */
+
+    for (int i = 0; i < ww; i++)
+    {
+        for (int j = 0; j < wh; j++)
+        {
+            QGraphicsPixmapItem *tile = new QGraphicsPixmapItem(grass);
+            tile->setPos(i * ST_TILESIZE, j * ST_TILESIZE);
+            this->addItem(tile);
+
+            mapTiles.push_back(tile);
+        }
+    }
+
+    /* Creating sprites */
+    //worldBackground->setRect(0, 0, ww * ST_TILESIZE, wh * ST_TILESIZE);  worldBackground->setBrush(Qt::green);
+    //this->addItem(worldBackground);
 
     std::vector<std::shared_ptr<Entity>> entities = sim->getEntities();
     
@@ -55,17 +67,21 @@ void SimulationScene::launch(int ww, int wh, int tickLength, int nbAnimals, floa
 
 void SimulationScene::update()
 {
-    //SimulationFrame frame = controller.getSimulationFrame();
+    //Getting the entities from the simulation
     auto entities = controller.getSimulationFrame().getEntities();
 
-    std::cout << "\r[Scene] Updating " << entities.size() << " entity sprites";
+    //std::cout << "\r[Scene] Updating " << entities.size() << " entity sprites";
 
+    //Update entity positions and textures
     for(int i = 0 ; i < (int)entities.size() ; ++i)
     {
         entitySprites[i]->setPos( entities[i]->getX(), entities[i]->getY() );
-        //entitySprites[i]->setPos(0,0);
+
+        if (entities[i]->getType() == EType::Predator || entities[i]->getType() == EType::Prey || entities[i]->getType() == EType::Animal)
+        {
+            entitySprites[i]->setZValue(9999);
+        }
         entitySprites[i]->setPixmap( textures[ entities[i]->getType() ] );
-        std::cout << "Entity " << i << " : (" << entities[i]->getX() << "," << entities[i]->getY() << "), type : " << entities[i]->getType() << "\n";
     }
 }
 
@@ -84,10 +100,19 @@ void SimulationScene::stop()
     controller.stop();
     this->removeItem(worldBackground);
 
-    for(auto&& sprite : entitySprites)
+    //Delete the sprites...
+    for(QGraphicsPixmapItem* sprite : entitySprites)
     {
         this->removeItem(sprite);
     }
+    entitySprites.clear();
+
+    //...and the ground tiles as well
+    for (QGraphicsPixmapItem *tile : mapTiles)
+    {
+        this->removeItem(tile);
+    }
+    mapTiles.clear();
 }
 
 QGraphicsPixmapItem *SimulationScene::getPlaceholder()

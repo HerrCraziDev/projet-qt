@@ -39,6 +39,9 @@ public:
     void setHeading(int value);
 
     /* Getters / setters for property modifiers */
+    /* Property modifiers are used for temporary acting on the Animal's properties
+    like for example, making a ground tile slowing it. Not used yet*/
+
     float hpModifier() const;
     float atkModifier() const;
     float defModifier() const;
@@ -51,11 +54,11 @@ public:
 
     bool isAlive() const;
 
-    virtual bool move(float dx, float dy);
-    virtual bool move(float dl, int angle);
-    virtual void update();
+    virtual bool move(float dx, float dy);  //Moves the Animal using cartesian coordinates (realtive to the current pos) Returns true if the move was successfull
+    virtual bool move(float dl, int angle); //Moves the Animal using polar coordinates
+    virtual void update();  //Generic actuator that updates the Animal. Children classes should overload it.
 
-    virtual void die();
+    virtual void die();     //Generic actuator that makes tha Animal die (by changing it's type). Children classes MUST reimplement this, as it's used for drawing the correct texture on the screen
 
 private:
     float _hp;

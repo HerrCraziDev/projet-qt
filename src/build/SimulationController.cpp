@@ -79,13 +79,16 @@ void SimulationController::worker(SimulationController *that)
     bool simAlive = true;
 
     while ( that->state() != SimulationState::Stopping && simAlive )
-    {
+    {   
+        //Pause the thread if locked
         that->mtx_pause.lock();
         that->mtx_pause.unlock();
 
+        //Process a SimulationFrame
         that->state(SimulationState::Running);
         simAlive = (*_sim)();
 
+        //Sleep
         std::this_thread::sleep_for(std::chrono::milliseconds(that->getTickLength()));
     }
 

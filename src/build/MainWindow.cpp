@@ -13,7 +13,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene = new SimulationScene(controller, this);
     ui->g_map->setScene(scene);
-    ui->g_map->centerOn(scene->getPlaceholder());
+    //ui->g_map->centerOn(scene->getPlaceholder());
     
     connect(ui->slider_predprct, SIGNAL(valueChanged(int)), this, SLOT(onSetPredatorPercentage(int)));
     connect(ui->slider_preysprct, SIGNAL(valueChanged(int)), this, SLOT(onSetPreyPercentage(int)));
@@ -63,10 +63,11 @@ void MainWindow::onLaunchSimulation()
     int tickLength = ui->slider_simspeed->value();
     uint seed = ui->input_seed->value();
 
-    ui->pbar_predators->setMaximum(popnumber);
-
     scene->launch(worldWidth, worldHeight, tickLength, popnumber, predPrct, seed);
-    ui->g_map->centerOn(worldWidth*ST_TILESIZE/2, worldHeight*ST_TILESIZE/2);
+    ui->g_map->translate(worldWidth*ST_TILESIZE/2, worldHeight*ST_TILESIZE/2);
+
+    ui->pbar_predators->setMaximum( controller.getSimulation()->countEntities( {EType::Predator} ) );
+    ui->pbar_preys->setMaximum( controller.getSimulation()->countEntities( {EType::Prey} ) );
 
     gphUpdater->start(1000/ST_FPS);
 
@@ -94,7 +95,8 @@ void MainWindow::update()
     scene->update();
     controller.setTickLength( ui->slider_simspeed->value() );
 
-    ui->pbar_predators->setValue( controller.getSimulation()->countEntities( {EType::Animal} ) );
+    ui->pbar_predators->setValue( controller.getSimulation()->countEntities( {EType::Predator} ) );
+    ui->pbar_preys->setValue( controller.getSimulation()->countEntities( {EType::Prey} ) );
 
     if (controller.state() == SimulationState::Stopping)
     {

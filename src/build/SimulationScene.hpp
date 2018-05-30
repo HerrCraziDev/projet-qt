@@ -34,8 +34,11 @@ public slots:
     void stop();
 
 private:
-    std::vector<QGraphicsPixmapItem*> entitySprites;
+    std::vector<QGraphicsPixmapItem *> entitySprites;
+    std::vector<QGraphicsPixmapItem *> mapTiles;
+    
     std::map<EType, QPixmap> textures;
+    QPixmap grass;
 
     QGraphicsPixmapItem *bk_placeholder;
     QGraphicsRectItem *worldBackground;

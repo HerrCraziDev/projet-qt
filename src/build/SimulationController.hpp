@@ -57,12 +57,12 @@ public:
     Simulation* getSimulation() const;  //Return the simulation
     SimulationFrame& getSimulationFrame(); //Return the current simulation frame
 
-    SimulationState state();
-    void state(SimulationState state);
+    SimulationState state();            //Return the simulation state (thread safe)
+    void state(SimulationState state);  //Set the simulation state (thread safe)
 
     static void worker(SimulationController *that);              //The processing loop. 
     
-    std::mutex mtx_pause;
+    std::mutex mtx_pause;   //Mutex locking the thread's main loop to pause it
 
 private:
     double _processedFrames;

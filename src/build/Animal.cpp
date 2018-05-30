@@ -168,11 +168,11 @@ bool Animal::move(float dl, int angle)
     float futureX = getX() + dl*cos(radAngle);
     float futureY = getY() + dl*sin(radAngle);
     
-    if ( futureX < 0 || futureX > world->width()*world->tileSize() )
+    if ( futureX < 0 || futureX + ST_TILESIZE > world->width()*world->tileSize() )
     {
         _heading = - _heading + 180;
     } 
-    else if ( futureY < 0 || futureY > world->height()*world->tileSize() )
+    else if ( futureY < 0 || futureY + ST_TILESIZE > world->height()*world->tileSize() )
     {
         _heading = - _heading;
     }
