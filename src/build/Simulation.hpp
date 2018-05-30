@@ -11,15 +11,18 @@ implémenter World dans Simulation avec un foncteur pour le processing d'une Sim
 #include <mutex>
 
 #include "Animal.hpp"
+#include "Predator.hpp"
+#include "Prey.hpp"
 
 class Simulation;
 
 class SimulationFrame
 {
-public: 
+public:
     SimulationFrame();
     SimulationFrame(Simulation *s);
     SimulationFrame(SimulationFrame &s);
+    SimulationFrame(SimulationFrame *s);
     ~SimulationFrame();
 
     std::vector<std::shared_ptr<Entity>> getEntities() const;
@@ -33,7 +36,7 @@ class Simulation
 {
 public:
     Simulation();
-    Simulation(int worldWidth, int worldHeight, int tileSize, int nbAnimals, float predatorsPrct);
+    Simulation(int worldWidth, int worldHeight, int tileSize, int nbAnimals, float predatorsPrct, uint seed);
     ~Simulation();
 
     bool createEntity(EType type, int posx, int posy, std::string name);  //Create a new entity of the given type at (posx, posy)
@@ -49,7 +52,11 @@ public:
     //std::vector<std::vector<std::shared_ptr<Tile>>> getWorld() const;
 
     bool processFrame();
-    SimulationFrame getCurrentFrame();
+    SimulationFrame& getCurrentFrame();
+
+    int width() const;
+    int height() const;
+    int tileSize() const;
     
     bool operator() ()
     {
@@ -57,6 +64,7 @@ public:
     }
 
 private:
+    int _width, _height, _tileSize;
     std::vector<std::shared_ptr<Entity>> _entities;
     std::mutex mtx_accessFrame;
     //std::vector<std::vector<std::shared_ptr<Tile>>> _world;

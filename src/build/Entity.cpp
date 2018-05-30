@@ -1,27 +1,30 @@
 #include "Entity.hpp"
+#include "Simulation.hpp"
 
-Entity::Entity() : x(0), y(0), visible(true), movable(false), name(""), texturePath("") {}
+Entity::Entity() : visible(true), movable(false), name(""), texturePath(""), x(0), y(0) {}
 
-Entity::Entity(EType t, int posx, int posy, std::string newName) :
-    x(posx), 
-    y(posy), 
+Entity::Entity(Simulation *wptr, EType t, int posx, int posy, std::string newName) :
+    world(wptr),
     visible(true), 
     movable(false),
     name(newName), 
     texturePath(""),
-    type(t)
+    type(t),
+    x(posx), 
+    y(posy)
 {
     std::cout << "[Entity] New Entity created : " << name << "\n";
 }
 
 Entity::Entity(Entity &source) :
-     x(source.getX()),
-     y(source.getY()), 
+     world(source.getSimulation()),
      visible(source.isVisible()), 
      movable(source.isMovable()),
      name(source.getName()), 
      texturePath(source.getTexturePath()),
-     type(source.getType())
+     type(source.getType()),
+     x(source.getX()),
+     y(source.getY())
 {
     std::cout << "[Entity] Entity copied\n";
 }
@@ -64,6 +67,13 @@ std::ostream& operator<< (std::ostream &ostr, EType type)
         case EType::Resource:
             ostr << "EType::Resource";
             break;
+        case EType::DeadPredator:
+            ostr << "EType::DeadPredator";
+            break;
+        case EType::DeadPrey:
+            ostr << "EType::DeadPrey";
+            break;
+
         default:
             break;
     }

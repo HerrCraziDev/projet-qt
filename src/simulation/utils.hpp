@@ -25,6 +25,7 @@ namespace utl
         }
 
         static void init();
+        static void seed(uint seed);
         static int get(int min, int max);
 
     protected:

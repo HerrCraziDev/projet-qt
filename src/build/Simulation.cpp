@@ -1,15 +1,38 @@
 #include "Simulation.hpp"
 
-
 Simulation::Simulation() {}
 
-Simulation::Simulation(int worldWidth, int worldHeight, int tileSize, int nbAnimals, float predatorsPrct)
+Simulation::Simulation(int worldWidth, int worldHeight, int tileSize, int nbAnimals, float predatorsPrct, uint seed) :
+    _width(worldWidth),
+    _height(worldHeight),
+    _tileSize(tileSize)
 {
-   
+    //predatorsPrct *= 100;
+
+    utl::rand randX(0, worldWidth * tileSize);
+    utl::rand randY(0, worldHeight * tileSize);
+    utl::rand randType(0, 100);
+
+    randX.seed(seed); randY.seed(seed); randType.seed(seed);
+
     for(int i = 0; i < nbAnimals; i++)
     {
-        createEntity(EType::Animal, 24, 42, "Peau de l'ours (avec ours)");   
+        //createEntity(EType::Animal, randX(), randY(), "Peau de l'ours (avec ours)");
+        std::cout << randType() << "/" << predatorsPrct << "\n";
+        if (randType() > predatorsPrct)
+        {
+            createEntity(EType::Prey, randX(), randY(), "Peau de l'ours (avec ours)");
+        } else {
+            createEntity(EType::Predator, randX(), randY(), "Camarade Pladimir Pladimirovich Voutine");
+        }
     }
+
+    
+    for(auto&& entity : _entities)
+    {
+        std::cout << "Entity " << entity->getName() << " is " << entity->getType() << "\n";
+    }
+    
     
 }
 
@@ -21,29 +44,41 @@ bool Simulation::createEntity(EType type, int posx, int posy, std::string name)
     
     switch (type)
     {
+        //case EType::Predator :
+        //case EType::Prey :
+        //                std::cerr << "[Simulation] in 'Simulation::createEntity(EType type, int posx, int posy, std::string name)\n\t 'EType type' (" << type << ") : Entity type not implemented. A generic Animal have been created instead.\n";
         case EType::Animal :
         {
-            Animal *newAnimal = new Animal(posx, posy, name);
+            Animal *newAnimal = new Animal(this, posx, posy, name);
             _entities.push_back(std::make_shared<Animal>(*newAnimal));
             break;
         }
+
+        case EType::Resource:
+        case EType::NeutralAsset :
+        case EType::EffectiveAsset :
+            std::cerr << "[Simulation] in 'Simulation::createEntity(EType type, int posx, int posy, std::string name)\n\t 'EType type' (" << type << ") : Entity type not implemented. A generic Entity have been created instead.\n";
         case EType::Entity :
         {
-            Entity *newEntity = new Entity(EType::Entity, posx, posy, name);
+            Entity *newEntity = new Entity(this, EType::Entity, posx, posy, name);
             _entities.push_back(std::make_shared<Entity>(*newEntity));
             break;
         }
-        /*
+        
         case EType::Predator :
-            Predator *newPredator = new Predator(MagicThings things);
-            _entities.push_back(std::make_shared<Predator>(newPredator));
+        {
+            Predator *newPredator = new Predator(this, posx, posy, ST_PREDATORATK, ST_PREDATORDEF, name);
+            _entities.push_back(std::make_shared<Predator>(*newPredator));
             break;
+        }
 
         case EType::Prey :
-            Predator *newPrey = new Predator(MagicThings things);
-            _entities.push_back(std::make_shared<Prey>(newPrey));
+        {
+            Prey *newPrey = new Prey(this, posx, posy, ST_PREYDEF, name);
+            _entities.push_back(std::make_shared<Prey>(*newPrey));
             break;
-
+        }
+        /*
         case EType::Resource :
             Resource *newResource = new Resource(MagicThings things);
             _entities.push_back(std::make_shared<Resource>(newResource));
@@ -59,15 +94,7 @@ bool Simulation::createEntity(EType type, int posx, int posy, std::string name)
             _entities.push_back(std::make_shared<EffectiveAsset>(newEffectiveAsset));
             break;
         */
-        case EType::Predator:
-        case EType::Prey:
-        case EType::Resource:
-        case EType::NeutralAsset:
-        case EType::EffectiveAsset:
-        {
-            std::cerr << "[Simulation] in 'Simulation::createEntity(EType type, int posx, int posy, std::string name)\n\t 'EType type' (" << type << ") : Entity type not implemented.\n";
-            break;
-        }
+
         default:
         {
             std::cerr << "[Simulation] in 'Simulation::createEntity(EType type, int posx, int posy, std::string name)\n\t'EType type' is not a valid EType entity type.\n\tValid types are Entity, Animal, Predator, Prey, Resource, NeutralAsset, EffectiveAsset.\n";
@@ -119,7 +146,7 @@ bool Simulation::processFrame()
 
     //NO MODIFICATIONS UNDER THIS LINE
     mtx_accessFrame.lock();
-    SimulationFrame _current(this);
+    _current = SimulationFrame(this);
     mtx_accessFrame.unlock();
 
     std::cout << "[Simulation] Updated " << countEntities( {EType::Animal, EType::Predator, EType::Prey} ) << " entities\n";
@@ -127,22 +154,47 @@ bool Simulation::processFrame()
 }
 
 //NEVER CALL THIS IN THE SIMULATION THREAD
-SimulationFrame Simulation::getCurrentFrame()
+SimulationFrame& Simulation::getCurrentFrame()
 {
     mtx_accessFrame.lock();
-    SimulationFrame _copy = _current;
+    SimulationFrame& _copy(_current);
     mtx_accessFrame.unlock();
 
     return _copy;
 }
 
+int Simulation::width() const
+{
+    return _width;
+}
+
+int Simulation::height() const
+{
+    return _height;
+}
+
+int Simulation::tileSize() const
+{
+    return _tileSize;
+}
+
+
+
 /*********** TO BE MOVED ************/
 SimulationFrame::SimulationFrame() {}
-SimulationFrame::SimulationFrame(Simulation *s) : _entities(s->getEntities()) {}
-SimulationFrame::SimulationFrame(SimulationFrame &s) : _entities(s.getEntities()) {}
+SimulationFrame::SimulationFrame(Simulation *s) : _entities(s->getEntities()) {
+    std::cout << "[DEBUG][Simufra] (sc) Size : " << _entities.size() << "/" << s->getEntities().size() << "\n";
+}
+SimulationFrame::SimulationFrame(SimulationFrame &s) : _entities(s.getEntities()) {
+    std::cout << "[DEBUG][Simufra] (&) Size : " << s.getEntities().size() << "\n";
+}
+SimulationFrame::SimulationFrame(SimulationFrame *s) : _entities(s->getEntities()) {
+    std::cout << "[DEBUG][Simufra] (*) Size : " << s->getEntities().size() << "\n";
+}
 
 std::vector<std::shared_ptr<Entity>> SimulationFrame::getEntities() const
 {
+    std::cout << "[DEBUG][Simufra] (r>) Size : " << _entities.size() << "\n";
     return _entities;
 }
 

@@ -10,25 +10,33 @@
 
 enum class EType
 {
-    Entity,     //Generic entity (a more precise type should be used instead of this)
-    Animal,     //Generic animal
-    Predator,   //A special type of Animal that have an aggressive behavior an eats Preys
-    Prey,       //A special type of Animal which can be eated by a Predator and eats Resources
-    Resource,      //A resource (special type of EffectiveAsset that gives health and disappears once eated)
+    Entity,         //Generic entity (a more precise type should be used instead of this)
+    Animal,         //Generic animal
+    Predator,       //A special type of Animal that have an aggressive behavior an eats Preys
+    Prey,           //A special type of Animal which can be eated by a Predator and eats Resources
+    Resource,       //A resource (special type of EffectiveAsset that gives health and disappears once eated)
     NeutralAsset,   //A neutral asset on the map that does not affect in any way nearby entities, like a log, dead leaves, ect
-    EffectiveAsset, //An asset that affects the nearby entities in some way (dealing damages, slowing movement)
+    EffectiveAsset, //An asset that affects the nearby entities in some way (dealing damages, slowing movement,...)
+    DeadPredator,   //The corpse of a dead predator, in fact a variant of a NeutralAsset
+    DeadPrey,       //The corpse of a dead prey, also a variant of a NeutralAsset
 };
 
-/* Sugar everywhere ! We loove sugar !*/
-static const std::vector<EType> EntityTypes = {   EType::Entity, 
+/* Sugar everywhere ! I loove sugar !*/
+static const std::vector<EType> EntityTypes = {     EType::Entity, 
                                                     EType::Animal, 
                                                     EType::Predator, 
                                                     EType::Prey, 
                                                     EType::Resource, 
                                                     EType::NeutralAsset, 
-                                                    EType::EffectiveAsset };
+                                                    EType::EffectiveAsset,
+                                                    EType::DeadPredator,
+                                                    EType::DeadPrey  };
 
 std::ostream& operator<< (std::ostream &ostr, EType type);
+
+/* Forward declaration of Simulation to ensure we can use it here */
+class Simulation;
+
 
 
 /* The basic representation of an Entity */
@@ -36,11 +44,15 @@ std::ostream& operator<< (std::ostream &ostr, EType type);
 class Entity
 {
 public:
+    /* Constructors, destructors n' stuff */
     Entity();
     Entity(Entity &source);
     
-    Entity(EType type, int posx, int posy, std::string newName);
+    Entity(Simulation* wptr, EType type, int posx, int posy, std::string newName);
     ~Entity();
+
+
+    /* Public methods */
 
     void lock()
     {
@@ -120,14 +132,23 @@ public:
         return type;
     }
 
+    Simulation *getSimulation() const
+    {
+        return world;
+    }
+
     virtual void update();
     
 protected:
-    float x, y;
+    Simulation *world;
+
     bool visible, movable;
 
     std::string name;
     std::string texturePath;
     EType type;
+
+private:
+    float x, y;
 };
 #endif //ENTITY

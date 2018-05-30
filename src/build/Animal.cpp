@@ -1,17 +1,17 @@
 #include "Animal.hpp"
+#include "Simulation.hpp"
 
 Animal::Animal() : Entity()
 {
     std::cout << "[Animal] Warning ! The default empty constructor for Animal was used. This will create an empty Animal.\n";
 }
 
-Animal::Animal(std::string animalName) : Entity(EType::Animal, 0, 0, animalName), _hp(100), _atk(10), _def(10), _speed(10), _heading(0)
+Animal::Animal(Simulation *wptr, std::string animalName) : Entity(wptr, EType::Animal, 0, 0, animalName), _hp(100), _atk(10), _def(10), _speed(10), _heading(utl::rand::get(0,360))
 {
     std::cout << "[Animal] New Animal created (constr: 'Animal::Animal(std::string animalName)')\n";
-    std::cout << "[Animal] Warning ! Null position used (no random generator available)\n";
 }
 
-Animal::Animal(int posx, int posy, std::string animalName) : Entity(EType::Animal, posx, posy, animalName), _hp(100), _atk(10), _def(10), _speed(10), _heading(0)
+Animal::Animal(Simulation *wptr, int posx, int posy, std::string animalName) : Entity(wptr, EType::Animal, posx, posy, animalName), _hp(100), _atk(10), _def(10), _speed(10), _heading(utl::rand::get(0,360))
 {
     std::cout << "[Animal] New Animal created (constr: 'Animal::Animal(int posx, int posy, std::string animalName)')\n";
 }
@@ -158,16 +158,29 @@ bool Animal::move(float dx, float dy)
 {
     setX(getX() + dx);
     setY(getY() + dy);
-    setHp( getHp() - sqrt(dx*dx + dy*dy) );
+    setHp( getHp() - sqrt(dx*dx + dy*dy)/10 );
     return true;
 }
 
 bool Animal::move(float dl, int angle)
 {
-    float radAngle = angle * M_PI / 180;
-    setX(getX() + dl*cos(radAngle));
-    setY(getY() + dl*sin(radAngle));
-    setHp( getHp() - dl );
+    float radAngle = angle * (M_PI / 180);
+    float futureX = getX() + dl*cos(radAngle);
+    float futureY = getY() + dl*sin(radAngle);
+    
+    if ( futureX < 0 || futureX > world->width()*world->tileSize() )
+    {
+        _heading = - _heading + 180;
+    } 
+    else if ( futureY < 0 || futureY > world->height()*world->tileSize() )
+    {
+        _heading = - _heading;
+    }
+
+
+    setX(futureX);
+    setY(futureY);
+    setHp( getHp() - dl/5 );
 
     return true;
 }
@@ -176,11 +189,16 @@ void Animal::update()
 {
     if ( isAlive() ) 
     {
-        move( (float)utl::rand::get(0, speed()), _heading + utl::rand::get(-36, 36) );
+        move( (float)utl::rand::get(0, speed())/10, _heading + utl::rand::get(-10, 10) );
 
         if ( !isAlive() ) //He died :(
         {
-            type = EType::NeutralAsset;
+            die();
         }
     }
+}
+
+void Animal::die()
+{
+    type = EType::NeutralAsset;
 }

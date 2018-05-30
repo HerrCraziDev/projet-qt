@@ -10,7 +10,8 @@
 #include <QGraphicsRectItem>
 #include <QtGui/QPixmap>
 
-#include "../simulation/SimulationController.hpp"
+#include "SimulationController.hpp"
+#include "settings.hpp"
 
 
 
@@ -19,12 +20,12 @@ class SimulationScene : public QGraphicsScene
     Q_OBJECT
 
 public:
-  SimulationScene(QObject *parent);
+  SimulationScene(SimulationController &cntr, QObject *parent = nullptr);
   ~SimulationScene();
 
   QGraphicsPixmapItem *getPlaceholder();
   
-  void launch(int ww, int wh, int tickLength, int nbAnimals, float preyPrct);
+  void launch(int ww, int wh, int tickLength, int nbAnimals, float predPrct, uint seed=42);
 
 public slots:
     void pause();
@@ -33,10 +34,14 @@ public slots:
     void stop();
 
 private:
-    std::vector<QGraphicsPixmapItem> entitySprites;
+    std::vector<QGraphicsPixmapItem*> entitySprites;
     std::map<EType, QPixmap> textures;
 
     QGraphicsPixmapItem *bk_placeholder;
+    QGraphicsRectItem *worldBackground;
+
+    SimulationController &controller;
+    Simulation *sim;
 };
 
 #endif // SIMULATION_SCENE

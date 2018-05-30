@@ -68,7 +68,7 @@ void utl::unique_rand::reset()
 template <typename T>
 int utl::findInVect(T value, std::vector<T> vect)
 {
-    for (uint i ; i < vect.size() ; ++i)
+    for (uint i = 0 ; i < vect.size() ; ++i)
     {
         if (value == vect[i]) return i;
     }

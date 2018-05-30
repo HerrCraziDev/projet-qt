@@ -73,10 +73,10 @@ void SimulationController::attach(Simulation *s)
 
 void SimulationController::worker(SimulationController *that)
 {
+    std::cout << "[Thread] Thread launched\n";
+
     Simulation *_sim = that->getSimulation();
     bool simAlive = true;
-
-    std::cout << "un peu de café\n";
 
     while ( that->state() != SimulationState::Stopping && simAlive )
     {
@@ -107,9 +107,9 @@ Simulation* SimulationController::getSimulation() const
     return _sim;
 }
 
-SimulationFrame SimulationController::getSimulationFrame() const
+SimulationFrame& SimulationController::getSimulationFrame()
 {
-    //SimulationFrame& s = _sim->getCurrentFrame();
+    return _sim->getCurrentFrame();
 }
 
 SimulationState SimulationController::state()
@@ -150,6 +150,9 @@ std::ostream& operator<< (std::ostream &out, SimulationState state)
             break;
         case SimulationState::Stopping:
             out << "SimulationState::Stopping";
+            break;
+        case SimulationState::Empty:
+            out << "SimulationState::Empty";
             break;
 
         default:

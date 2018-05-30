@@ -55,7 +55,7 @@ public:
     void exec(int frames=1);    //Process the given number of frames
 
     Simulation* getSimulation() const;  //Return the simulation
-    SimulationFrame getSimulationFrame() const; //Return the current simulation frame
+    SimulationFrame& getSimulationFrame(); //Return the current simulation frame
 
     SimulationState state();
     void state(SimulationState state);

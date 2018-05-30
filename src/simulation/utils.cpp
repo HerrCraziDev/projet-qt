@@ -33,6 +33,11 @@ void utl::rand::init()
     std::srand(std::time(nullptr));
 }
 
+void utl::rand::seed(uint seed)
+{
+    std::srand(seed);
+}
+
 
 utl::unique_rand::unique_rand() : rand(), _calls(0) {}
 

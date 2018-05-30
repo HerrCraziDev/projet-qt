@@ -4,6 +4,8 @@
 #include <QMainWindow>
 #include <QMessageBox>
 #include <QDebug>
+#include <QTimer>
+
 #include <iostream>
 
 #include "SimulationScene.hpp"
@@ -21,7 +23,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
     
-    //SimulationController &getController();
+    SimulationController &getController();
 
 public slots:
     void onSetPredatorPercentage(int prct);
@@ -32,13 +34,19 @@ public slots:
     void onTogglePause(bool toggle);
     void onStopSimulation();
 
+    void update();
 
 
 private:
+    void toggleLaunchButton();
+
     Ui::MainWindow *ui;
     SimulationScene *scene;
+    QTimer *gphUpdater;
 
     SimulationController controller;
+
+    bool btnLaunch_state = true;
 };
 
 #endif // MAINWINDOW_HPP

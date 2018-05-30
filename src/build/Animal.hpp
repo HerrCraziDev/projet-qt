@@ -12,8 +12,8 @@ class Animal : public Entity
 {
 public:
     Animal();
-    Animal(std::string animalName);
-    Animal(int posx, int posy, std::string animalName);
+    Animal(Simulation *wptr, std::string animalName);
+    Animal(Simulation *wptr, int posx, int posy, std::string animalName);
     Animal(Animal &a);
     ~Animal();
 
@@ -54,6 +54,8 @@ public:
     virtual bool move(float dx, float dy);
     virtual bool move(float dl, int angle);
     virtual void update();
+
+    virtual void die();
 
 private:
     float _hp;
